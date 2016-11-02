@@ -10,10 +10,10 @@
  * Module dependencies.
  */
 
-var gcc = require('google-closure-compiler-js');
-var utils = require('../utils');
+import gcc from 'google-closure-compiler-js';
+import { utils } from '../utils';
 // the allowed flags, taken from https://github.com/google/closure-compiler-js
-var allowedFlags = [
+const allowedFlags = [
   'angularPass',
   'applyInputSourceMaps',
   'assumeFunctionWrapper',
@@ -40,12 +40,6 @@ var allowedFlags = [
 ];
 
 /**
- * Expose `compressGCCJS()`.
- */
-
-module.exports = compressGCCJS;
-
-/**
  * Run Google Closure Compiler.
  *
  * @param {Object} settings
@@ -54,9 +48,9 @@ module.exports = compressGCCJS;
  */
 
 function compressGCCJS(settings, content, callback) {
-  var flags = { jsCode: [{ src: content }] };
+  let flags = { jsCode: [{ src: content }] };
   flags = applyOptions(flags, settings.options);
-  var contentMinified = gcc.compile(flags);
+  const contentMinified = gcc.compile(flags);
   utils.writeFile(settings.output, contentMinified.compiledCode);
   if (callback) {
     return callback(null, contentMinified.compiledCode);
@@ -84,3 +78,9 @@ function applyOptions(flags, options) {
     });
   return flags;
 }
+
+/**
+ * Expose `compressGCCJS()`.
+ */
+
+export { compressGCCJS };

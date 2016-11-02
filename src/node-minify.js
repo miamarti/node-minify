@@ -10,15 +10,9 @@
  * Module dependencies.
  */
 
-var deprecated = require('./deprecated');
-var setup = require('./setup');
-var compress = require('./compress');
-
-/**
- * Expose `minify()`.
- */
-
-var app = (module.exports = {});
+import { deprecated } from './deprecated';
+import { setup } from './setup';
+import { compress } from './compress';
 
 /**
  * Run node-minify.
@@ -26,13 +20,13 @@ var app = (module.exports = {});
  * @param {Object} settings - Settings from user input
  */
 
-app.minify = function minify(settings) {
-  deprecated(this.constructor.name, settings);
+const minify = settings => {
+  deprecated(settings);
   return new Promise(function(resolve, reject) {
     settings = setup(settings);
     if (!settings.sync) {
       compress(settings)
-        .then(function(min) {
+        .then(min => {
           if (settings.callback) {
             settings.callback(null, min);
           }
@@ -45,7 +39,7 @@ app.minify = function minify(settings) {
           reject(err);
         });
     } else {
-      var min = compress(settings);
+      const min = compress(settings);
       if (settings.callback) {
         settings.callback(null, min);
       }
@@ -53,3 +47,5 @@ app.minify = function minify(settings) {
     }
   });
 };
+
+export { minify };

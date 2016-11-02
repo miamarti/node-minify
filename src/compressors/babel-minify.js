@@ -10,14 +10,8 @@
  * Module dependencies.
  */
 
-var babel = require('babel-core');
-var utils = require('../utils');
-
-/**
- * Expose `compressBabelMinify()`.
- */
-
-module.exports = compressBabelMinify;
+import { transform } from 'babel-core';
+import { utils } from '../utils';
 
 /**
  * Run babel-minify.
@@ -27,8 +21,8 @@ module.exports = compressBabelMinify;
  * @param {Function} callback
  */
 
-function compressBabelMinify(settings, content, callback) {
-  var babelOptions = {
+const compressBabelMinify = (settings, content, callback) => {
+  let babelOptions = {
     presets: []
   };
 
@@ -37,7 +31,7 @@ function compressBabelMinify(settings, content, callback) {
   }
 
   if (settings.options.presets) {
-    var babelrcPresets = babelOptions.presets || [];
+    const babelrcPresets = babelOptions.presets || [];
     babelOptions.presets = babelrcPresets.concat(settings.options.presets);
   }
 
@@ -45,10 +39,16 @@ function compressBabelMinify(settings, content, callback) {
     babelOptions.presets = babelOptions.presets.concat(['minify']);
   }
 
-  var contentMinified = babel.transform(content, babelOptions);
+  const contentMinified = transform(content, babelOptions);
   utils.writeFile(settings.output, contentMinified.code);
   if (callback) {
     return callback(null, contentMinified.code);
   }
   return contentMinified.code;
-}
+};
+
+/**
+ * Expose `compressBabelMinify()`.
+ */
+
+export { compressBabelMinify };

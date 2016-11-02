@@ -10,13 +10,7 @@
  * Module dependencies.
  */
 
-var utils = require('../utils');
-
-/**
- * Expose `noCompress()`.
- */
-
-module.exports = noCompress;
+import { utils } from '../utils';
 
 /**
  * Just merge, no compression.
@@ -33,3 +27,9 @@ function noCompress(settings, content, callback) {
   }
   return content;
 }
+
+/**
+ * Expose `noCompress()`.
+ */
+
+export { noCompress };

@@ -13,7 +13,7 @@
 var path = require('path');
 var glob = require('glob');
 var extend = require('xtend');
-var utils = require('./utils');
+import { utils } from './utils';
 
 /**
  * Default settings.
@@ -30,7 +30,7 @@ var defaultSettings = {
  * Expose `setup()`.
  */
 
-module.exports = setup;
+export { setup };
 
 /**
  * Run setup.

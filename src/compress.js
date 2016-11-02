@@ -10,24 +10,24 @@
  * Module dependencies.
  */
 
-var fs = require('fs');
-var mkdirp = require('mkdirp');
-var utils = require('../lib/utils');
-var babelMinify = require('./compressors/babel-minify');
-var butternut = require('./compressors/butternut');
-var cleanCSS = require('./compressors/clean-css');
-var csso = require('./compressors/csso');
-var gcc;
-var gccJava = require('./compressors/gcc-java');
-var noCompress = require('./compressors/no-compress');
-var sqwish = require('./compressors/sqwish');
-var uglifyjs = require('./compressors/uglifyjs');
-var yui = require('./compressors/yui');
+import fs from 'fs';
+import mkdirp from 'mkdirp';
+import { utils } from './utils';
+import { compressBabelMinify } from './compressors/babel-minify';
+import { compressButternut } from './compressors/butternut';
+import { compressCleanCSS } from './compressors/clean-css';
+import { compressCSSO } from './compressors/csso';
+let gcc;
+import { compressGCC } from './compressors/gcc-java';
+import { noCompress } from './compressors/no-compress';
+import { compressSqwish } from './compressors/sqwish';
+import { compressUglifyJS } from './compressors/uglifyjs';
+import { compressYUI } from './compressors/yui';
 
 if ((process.execArgv && process.execArgv.indexOf('--use_strict') > -1) || !utils.isNodeV4AndHigher()) {
-  gcc = require('./compressors/gcc-java');
+  gcc = require('./compressors/gcc-java').compressGCC;
 } else {
-  gcc = require('./compressors/gcc');
+  gcc = require('./compressors/gcc').compressGCCJS;
 }
 
 /**
@@ -35,41 +35,35 @@ if ((process.execArgv && process.execArgv.indexOf('--use_strict') > -1) || !util
  * to be executed
  */
 
-var compressorsMap = {
-  'babel-minify': babelMinify,
-  butternut: butternut,
-  yui: function(settings, data, callback) {
-    return yui('css', settings, data, callback);
+const compressorsMap = {
+  'babel-minify': compressBabelMinify,
+  butternut: compressButternut,
+  yui: (settings, data, callback) => {
+    return compressYUI('css', settings, data, callback);
   },
-  'yui-css': function(settings, data, callback) {
-    return yui('css', settings, data, callback);
+  'yui-css': (settings, data, callback) => {
+    return compressYUI('css', settings, data, callback);
   },
-  'yui-js': function(settings, data, callback) {
-    return yui('js', settings, data, callback);
+  'yui-js': (settings, data, callback) => {
+    return compressYUI('js', settings, data, callback);
   },
   gcc: gcc,
-  'gcc-java': function(settings, data, callback) {
-    return gccJava(settings, data, callback, false);
+  'gcc-java': (settings, data, callback) => {
+    return compressGCC(settings, data, callback, false);
   },
-  'gcc-legacy': function(settings, data, callback) {
-    return gccJava(settings, data, callback, true);
+  'gcc-legacy': (settings, data, callback) => {
+    return compressGCC(settings, data, callback, true);
   },
-  uglifyjs: uglifyjs,
-  sqwish: sqwish,
-  'clean-css': cleanCSS,
-  csso: csso,
+  uglifyjs: compressUglifyJS,
+  sqwish: compressSqwish,
+  'clean-css': compressCleanCSS,
+  csso: compressCSSO,
   'no-compress': noCompress,
   /**
    * @deprecated since version 2.4.0 - babili was renamed to babel-minify
    */
-  babili: babelMinify
+  babili: compressBabelMinify
 };
-
-/**
- * Expose `compress()`.
- */
-
-module.exports = compress;
 
 /**
  * Run compressor.
@@ -77,15 +71,15 @@ module.exports = compress;
  * @param {Object} settings
  */
 
-function compress(settings) {
+const compress = settings => {
   if (typeof compressorsMap[settings.compressor] !== 'function') {
     throw new Error('Type "' + settings.compressor + '" does not exist');
   }
 
   createDirectory(settings.output);
-  var content = getContentFromFiles(settings.input);
+  const content = getContentFromFiles(settings.input);
   return settings.sync ? runSync(settings, content) : runAsync(settings, content);
-}
+};
 
 /**
  * Run compressor in sync.
@@ -125,7 +119,7 @@ function runAsync(settings, content) {
  * @return {String}
  */
 
-function getContentFromFiles(input) {
+const getContentFromFiles = input => {
   if (!Array.isArray(input)) {
     return fs.readFileSync(input, 'utf8');
   }
@@ -135,7 +129,7 @@ function getContentFromFiles(input) {
       return fs.readFileSync(path, 'utf8');
     })
     .join('\n');
-}
+};
 
 /**
  * Create folder of the target file.
@@ -143,6 +137,12 @@ function getContentFromFiles(input) {
  * @param {String} file - Full path of the file
  */
 
-function createDirectory(file) {
+const createDirectory = file => {
   mkdirp.sync(file.substr(0, file.lastIndexOf('/')));
-}
+};
+
+/**
+ * Expose `compress()`.
+ */
+
+export { compress };

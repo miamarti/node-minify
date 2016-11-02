@@ -8,9 +8,9 @@
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-var childProcess = require('child_process');
-var mkdirp = require('mkdirp');
-var nodeMinify = require('../lib/node-minify');
+import childProcess from 'child_process';
+import mkdirp from 'mkdirp';
+import { minify } from '../src/node-minify';
 
 var oneFile = __dirname + '/../examples/public/js/sample.js';
 var filesArray = [__dirname + '/../examples/public/js/sample.js', __dirname + '/../examples/public/js/sample2.js'];
@@ -422,7 +422,7 @@ var runOneTest = function(options, compressor, sync) {
         resolve(err, min);
       };
 
-      nodeMinify.minify(options.minify);
+      minify(options.minify);
     }).then(function(err, min) {
       expect(err).toBeNull();
       expect(min).not.toBeNull();
@@ -442,7 +442,7 @@ describe('node-minify', function() {
         output: fileJSOut
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toEqual('Error: Type "fake" does not exist');
       });
     });
@@ -456,7 +456,7 @@ describe('node-minify', function() {
         output: fileJSOut
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toEqual('Error: compressor is mandatory.');
       });
     });
@@ -468,7 +468,7 @@ describe('node-minify', function() {
         output: fileJSOut
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toEqual('Error: input is mandatory.');
       });
     });
@@ -480,7 +480,7 @@ describe('node-minify', function() {
         input: __dirname + '/../examples/public/js/**/*.js'
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toEqual('Error: output is mandatory.');
       });
     });
@@ -500,7 +500,7 @@ describe('node-minify', function() {
       };
       var spy = jest.spyOn(options.minify, 'callback');
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         expect(spy).toHaveBeenCalled();
         return expect(err.toString()).toMatch('"--fake" is not a valid option');
       });
@@ -518,7 +518,7 @@ describe('node-minify', function() {
         }
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toMatch('"--fake" is not a valid option');
       });
     });
@@ -534,7 +534,7 @@ describe('node-minify', function() {
         }
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toMatch('Usage: java -jar');
       });
     });
@@ -551,7 +551,7 @@ describe('node-minify', function() {
         }
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toMatch('Usage: java -jar');
       });
     });
@@ -570,7 +570,7 @@ describe('node-minify', function() {
         sync: true
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toEqual(
           'Latest Google Closure Compiler requires Java >= 1.7, please' + ' update Java or use gcc-legacy'
         );
@@ -593,7 +593,7 @@ describe('node-minify', function() {
         done();
       };
 
-      new nodeMinify.minify(options.minify);
+      new minify(options.minify);
     });
 
     test('should show a deprecated message for babili', function(done) {
@@ -610,7 +610,7 @@ describe('node-minify', function() {
         done();
       };
 
-      new nodeMinify.minify(options.minify);
+      minify(options.minify);
     });
 
     test('should show throw on type option', function() {
@@ -622,7 +622,7 @@ describe('node-minify', function() {
         callback: function() {}
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toEqual('Error: compressor is mandatory.');
       });
     });
@@ -635,7 +635,7 @@ describe('node-minify', function() {
         output: fileJSOut
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toEqual('Error: input is mandatory.');
       });
     });
@@ -648,7 +648,7 @@ describe('node-minify', function() {
         fileOut: fileJSOut
       };
 
-      return nodeMinify.minify(options.minify).catch(function(err) {
+      return minify(options.minify).catch(function(err) {
         return expect(err.toString()).toEqual('Error: output is mandatory.');
       });
     });
@@ -664,7 +664,7 @@ describe('node-minify', function() {
     });
     test('should not throw with --use_strict flag', function(done) {
       jest.resetModules();
-      var nodeMinify = require('../lib/node-minify');
+      var nodeMinify = require('../src/node-minify').minify;
       var options = {};
       options.minify = {
         compressor: 'gcc',
@@ -677,8 +677,7 @@ describe('node-minify', function() {
         expect(min).not.toBeNull();
         done();
       };
-
-      new nodeMinify.minify(options.minify);
+      nodeMinify(options.minify);
     });
   });
 
@@ -722,7 +721,7 @@ describe('node-minify', function() {
         done();
       };
 
-      nodeMinify.minify(options.minify);
+      minify(options.minify);
     });
   });
 
@@ -766,7 +765,7 @@ describe('node-minify', function() {
         done();
       };
 
-      nodeMinify.minify(options.minify);
+      minify(options.minify);
     });
   });
 
@@ -795,7 +794,7 @@ describe('node-minify', function() {
         done();
       };
 
-      nodeMinify.minify(options.minify);
+      minify(options.minify);
     });
   });
 
@@ -824,7 +823,7 @@ describe('node-minify', function() {
         done();
       };
 
-      nodeMinify.minify(options.minify);
+      minify(options.minify);
     });
   });
 
@@ -860,7 +859,7 @@ describe('node-minify', function() {
         done();
       };
 
-      nodeMinify.minify(options.minify);
+      minify(options.minify);
     });
   });
 
@@ -892,7 +891,7 @@ describe('node-minify', function() {
         done();
       };
 
-      nodeMinify.minify(options.minify);
+      minify(options.minify);
     });
     test('should compress with some options', function(done) {
       var options = {};
@@ -912,7 +911,7 @@ describe('node-minify', function() {
         done();
       };
 
-      nodeMinify.minify(options.minify);
+      minify(options.minify);
     });
   });
 

@@ -3,3 +3,5 @@
 ._*
 node_modules
 coverage
+dist
+lib

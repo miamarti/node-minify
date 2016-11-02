@@ -10,14 +10,8 @@
  * Module dependencies.
  */
 
-var csso = require('csso');
-var utils = require('../utils');
-
-/**
- * Expose `compressCSSO()`.
- */
-
-module.exports = compressCSSO;
+import csso from 'csso';
+import { utils } from '../utils';
 
 /**
  * Run csso.
@@ -28,10 +22,16 @@ module.exports = compressCSSO;
  */
 
 function compressCSSO(settings, content, callback) {
-  var contentMinified = csso.minify(content, settings.options.restructureOff);
+  const contentMinified = csso.minify(content, settings.options.restructureOff);
   utils.writeFile(settings.output, contentMinified.css);
   if (callback) {
     return callback(null, contentMinified.css);
   }
   return contentMinified.css;
 }
+
+/**
+ * Expose `compressCSSO()`.
+ */
+
+export { compressCSSO };

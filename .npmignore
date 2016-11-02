@@ -1,14 +1,2 @@
-.idea
-._*
-node_modules
-coverage
-examples
-__tests__
-.eslintrc
-.npmignore
-.npmrc
-.travis.yml
-appveyor.yml
-yarn.lock
-.yarnrc
-circle.yml
+*
+!lib/*

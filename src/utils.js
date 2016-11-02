@@ -10,14 +10,10 @@
  * Module dependencies.
  */
 
-var fs = require('fs');
-var nodeVersion = require('node-version');
-
-/**
- * Expose `utils`.
- */
-
-var utils = (module.exports = {});
+import fs from 'fs';
+import nodeVersion from 'node-version';
+// var nodeVersion = require('node-version');
+const utils = {};
 
 /**
  * Read content from file.
@@ -51,7 +47,7 @@ utils.writeFile = function writeFile(file, content) {
  */
 
 utils.buildArgs = function buildArgs(options) {
-  var args = [];
+  const args = [];
 
   Object.keys(options).forEach(function(key) {
     if (options[key] && options[key] !== false) {
@@ -86,3 +82,9 @@ utils.clone = function clone(obj) {
 utils.isNodeV4AndHigher = function isNodeV4AndHigher() {
   return parseInt(nodeVersion.major, 10) >= 4;
 };
+
+/**
+ * Expose `utils`.
+ */
+
+export { utils };

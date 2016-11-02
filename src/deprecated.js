@@ -10,34 +10,15 @@
  * Module dependencies.
  */
 
-var deprecate = require('depd')('node-minify');
-
-/**
- * Expose `deprecated()`.
- */
-
-module.exports = deprecated;
+const deprecate = require('depd')('node-minify');
 
 /**
  * Deprecate some old syntax.
  *
- * @param {String} constructorName
  * @param {Object} settings
  */
 
-function deprecated(constructorName, settings) {
-  if (constructorName === 'minify') {
-    deprecate(
-      'Instantiate is no longer necessary.\n' +
-        'new compressor.minify() is deprecated.\n' +
-        'Please use:\n' +
-        '\n' +
-        '  var compressor = require("node-minify");\n' +
-        '  compressor.minify();\n' +
-        '\n'
-    );
-  }
-
+const deprecated = settings => {
   if (settings.type) {
     deprecate('type was renamed to compressor');
   }
@@ -53,4 +34,10 @@ function deprecated(constructorName, settings) {
   if (settings.compressor === 'babili') {
     deprecate('babili was renamed to babel-minify');
   }
-}
+};
+
+/**
+ * Expose `deprecated()`.
+ */
+
+export { deprecated };

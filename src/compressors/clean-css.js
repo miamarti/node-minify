@@ -10,14 +10,8 @@
  * Module dependencies.
  */
 
-var CleanCSS = require('clean-css');
-var utils = require('../utils');
-
-/**
- * Expose `compressCleanCSS()`.
- */
-
-module.exports = compressCleanCSS;
+import CleanCSS from 'clean-css';
+import { utils } from '../utils';
 
 /**
  * Run clean-css.
@@ -28,10 +22,16 @@ module.exports = compressCleanCSS;
  */
 
 function compressCleanCSS(settings, content, callback) {
-  var contentMinified = new CleanCSS(settings.options).minify(content).styles;
+  const contentMinified = new CleanCSS(settings.options).minify(content).styles;
   utils.writeFile(settings.output, contentMinified);
   if (callback) {
     return callback(null, contentMinified);
   }
   return contentMinified;
 }
+
+/**
+ * Expose `compressCleanCSS()`.
+ */
+
+export { compressCleanCSS };

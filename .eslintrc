@@ -18,5 +18,9 @@
       }
     ]
   },
-  "extends": "prettier"
+  "extends": "prettier",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  }
 }

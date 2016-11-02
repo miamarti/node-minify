@@ -10,14 +10,8 @@
  * Module dependencies.
  */
 
-var butternut = require('butternut');
-var utils = require('../utils');
-
-/**
- * Expose `compressButternut()`.
- */
-
-module.exports = compressButternut;
+import { squash } from 'butternut';
+import { utils } from '../utils';
 
 /**
  * Run butternut.
@@ -28,7 +22,7 @@ module.exports = compressButternut;
  */
 
 function compressButternut(settings, content, callback) {
-  var contentMinified = butternut.squash(content, settings.options);
+  const contentMinified = squash(content, settings.options);
   if (contentMinified.map && settings.options.sourceMap) {
     utils.writeFile(settings.output + '.map', contentMinified.map);
   }
@@ -38,3 +32,9 @@ function compressButternut(settings, content, callback) {
   }
   return contentMinified.code;
 }
+
+/**
+ * Expose `compressButternut()`.
+ */
+
+export { compressButternut };
